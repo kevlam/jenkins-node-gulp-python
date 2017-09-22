@@ -25,10 +25,9 @@ ENV PACKAGES="\
 "
 
 #RUN apk --update --no-cache add openjdk8-jre openssh git
-RUN 
-    
+RUN echo \
   # Add the packages, with a CDN-breakage fallback if needed
-  apk add --no-cache $PACKAGES || \
+  && apk add --no-cache $PACKAGES || \
     (sed -i -e 's/dl-cdn/dl-4/g' /etc/apk/repositories && apk add --no-cache $PACKAGES) \
   # make some useful symlinks that are expected to exist
   && if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python3.4 /usr/bin/python; fi \
