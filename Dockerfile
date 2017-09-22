@@ -21,7 +21,8 @@ ENV PACKAGES="\
   git \
   ca-certificates \
   python3.4 \
-  python3.4-dev 
+  python3.4-dev\
+"
 
 #RUN apk --update --no-cache add openjdk8-jre openssh git
 
