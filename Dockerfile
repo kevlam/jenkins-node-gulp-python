@@ -25,25 +25,21 @@ ENV PACKAGES="\
 "
 
 #RUN apk --update --no-cache add openjdk8-jre openssh git
-
-
-
-RUN set -x && \
-    echo "UsePrivilegeSeparation no" >> /etc/ssh/sshd_config && \
-    echo "PermitRootLogin no" >> /etc/ssh/sshd_config && \
-    echo "AllowGroups jenkins" >> /etc/ssh/sshd_config \
+RUN 
     
-	# Add the packages, with a CDN-breakage fallback if needed
-    && apk add --no-cache $PACKAGES || \
-      (sed -i -e 's/dl-cdn/dl-4/g' /etc/apk/repositories && apk add --no-cache $PACKAGES) \
-
-	# make some useful symlinks that are expected to exist
-	&& if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python3.4 /usr/bin/python; fi \
-	&& if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python3.4-config /usr/bin/python-config; fi \
-	&& if [[ ! -e /usr/bin/idle ]];          then ln -sf /usr/bin/idle3.4 /usr/bin/idle; fi \
-	&& if [[ ! -e /usr/bin/pydoc ]];         then ln -sf /usr/bin/pydoc3.4 /usr/bin/pydoc; fi \
-	&& if [[ ! -e /usr/bin/easy_install ]];  then ln -sf /usr/bin/easy_install-3.4 /usr/bin/easy_install; fi \
-
+  # Add the packages, with a CDN-breakage fallback if needed
+  apk add --no-cache $PACKAGES || \
+    (sed -i -e 's/dl-cdn/dl-4/g' /etc/apk/repositories && apk add --no-cache $PACKAGES) \
+  # make some useful symlinks that are expected to exist
+  && if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python3.4 /usr/bin/python; fi \
+  && if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python3.4-config /usr/bin/python-config; fi \
+  && if [[ ! -e /usr/bin/idle ]];          then ln -sf /usr/bin/idle3.4 /usr/bin/idle; fi \
+  && if [[ ! -e /usr/bin/pydoc ]];         then ln -sf /usr/bin/pydoc3.4 /usr/bin/pydoc; fi \
+  && if [[ ! -e /usr/bin/easy_install ]];  then ln -sf /usr/bin/easy_install-3.4 /usr/bin/easy_install; fi \
+  && set -x \
+  && echo "UsePrivilegeSeparation no" >> /etc/ssh/sshd_config \
+  && echo "PermitRootLogin no" >> /etc/ssh/sshd_config \
+  && echo "AllowGroups jenkins" >> /etc/ssh/sshd_config \
   # Install and upgrade Pip
   && easy_install pip \
   && pip install --upgrade pip \
